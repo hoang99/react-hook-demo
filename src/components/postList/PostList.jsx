@@ -1,15 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { useForm } from "react-hook-form";
+import { useState } from 'react';
 PostList.propTypes = {
-    posts: PropTypes.array,
+    getDataPostList: PropTypes.array,
 };
 PostList.defaultProps = {
-    posts: [],
+    getDataPostList: [],
 }
 function PostList(props) {
-    const { posts } = props
-    console.log(posts);
+    const { getDataPostList } = props
+    // console.log(getDataPostList);
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+
+    const onHandleSubmit = (data) => {
+        console.log(data);
+        props.addDataPostList(data) //xử dụng props bắn data ra ngoài
+        // console.log(watch("tenbaibao")) //xem giá trị truyền vào
+        // console.log(watch("noidung"))
+    }
+
+
+
+
+
+
     return (
         <div className="container-fluid" >
             <div class="row">
@@ -20,15 +35,22 @@ function PostList(props) {
                                 <th>STT</th>
                                 <th>Tên bài báo</th>
                                 <th>Nội dung</th>
+                                <th>
+                                    xóa
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                posts.map((value, key) => (
+                                getDataPostList.map((value, key) => (
                                     <tr>
                                         <td>{value.id}</td>
                                         <td>{value.title}</td>
                                         <td>{value.desc}</td>
+                                        <td>
+                                            <button className="btn btn-danger" >Xóa</button>
+
+                                        </td>
                                     </tr>
                                 ))
                             }
@@ -37,16 +59,17 @@ function PostList(props) {
 
                 </div>
                 <div className="col-3">
-                    <form >
-                        <div className="form-group">
+                    <form onSubmit={handleSubmit(onHandleSubmit)}>
+                        <div className="form-group" >
                             <label htmlFor="exampleInputEmail1">Tên bài báo</label>
-                            <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                            <input type="text" className="form-control"  {...register("tenbaibao")} required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="exampleInputPassword1">Nội dung</label>
-                            <input type="password" className="form-control" id="exampleInputPassword1" />
+                            <input type="text" className="form-control"  {...register("noidung")} required />
                         </div>
-                        <button type="submit" className="btn btn-primary">Thêm</button>
+
+                        <button type="submit" className="btn btn-primary" >Thêm</button>
                     </form>
 
                 </div>
