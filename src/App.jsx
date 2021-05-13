@@ -62,8 +62,6 @@ function App() {
 
     ////// POST DATA POST_LIST
     const handleDataPostList = (dataNews) => { // hàm handleDataPostList sẽ chứa data trong PostList
-
-
         var item = {};
         item.id = dataPostList.length + 1;
         item.title = dataNews.tenbaibao;
@@ -89,8 +87,59 @@ function App() {
         }
         postDataNews()
     }
+    ///////////// PUT
+    const [getIDEdit, setGetIDEdit] = useState('')
+    const [getDataEdit, setGetDataEdit] = useState('')
+    const handleGetDataEdit = (value) => {
+        setGetIDEdit(value.id)
+    }
 
+    const handlePushDataEdit = (value) => {
+
+
+        var dataEdit = {};
+        dataEdit.id = getIDEdit
+        dataEdit.title = value.tenbaibao
+        dataEdit.desc = value.noidung
+        setGetDataEdit(dataEdit)
+        dataPostList.map(i => {
+            if (i.id === dataEdit.id) {
+                i.title = dataEdit.title;
+                i.desc = dataEdit.desc;
+            }
+        })
+        async function editDataPostList() {
+            await axios({
+                method: 'PUT',
+                url: "http://localhost:3000/new/" + getIDEdit,
+                data: {
+                    title: value.tenbaibao,
+                    desc: value.noidung,
+                },
+            }).then(res => res.data)
+        }
+        editDataPostList()
+    }
+
+    //////////// DELETE 
+    const handleDeleteDataPostList = (id) => {
+        // console.log(id);
+        const dataPostListAfterDeletedata = dataPostList.filter(item => item.id !== id)
+        setdataPostList(dataPostListAfterDeletedata)
+        async function deleteDataPostList() {
+            await axios({
+                method: "DELETE",
+                url: "http://localhost:3000/new/" + id,
+                data: null
+            }).then(res => res.data)
+        }
+        deleteDataPostList()
+
+
+    }
+    // console.log(dataPostList)
     return (
+
         <div className="App">
 
             {/* <h1>Change Color</h1>
@@ -100,8 +149,13 @@ function App() {
             <h1>Demo Todo List use useState</h1>
             <TodoList todos={todoList} onTodoClick={handleTodoClick} /> */}
             <h1>demo PostList</h1>
-            <PostList getDataPostList={dataPostList} addDataPostList={handleDataPostList}></PostList>
-
+            <PostList getDataPostList={dataPostList}
+                addDataPostList={handleDataPostList}
+                deleteDataPostLost={handleDeleteDataPostList}
+                getDataEdit={handleGetDataEdit}
+                pushDataEdit={handlePushDataEdit}
+            ></PostList>
+            {/* <Test></Test> */}
 
         </div>
     );

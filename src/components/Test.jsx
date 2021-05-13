@@ -1,24 +1,57 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { useForm } from "react-hook-form";
 
-export default function Test() {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
 
-    // watch input value by passing the name of it
+
+function Test() {
+    const { register, errors, handleSubmit } = useForm()
+
+    const {
+        register: register2,
+        errors: errors2,
+        handleSubmit: handleSubmit2
+    } = useForm();
+
+    const onSubmit = data => {
+        alert(JSON.stringify(data));
+    };
+
+    const onSubmitEmail = data => {
+        alert(JSON.stringify(data));
+    };
 
     return (
-        /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-        <form onSubmit={handleSubmit(onSubmit)}>
-            {/* register your input into the hook by invoking the "register" function */}
-            <input  {...register("example")} />
+        <div className="App">
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                    <label >First Name</label>
+                    <input type="text" className="form-control"  {...register("tenbaibao")} required />
 
-            {/* include validation with required or other standard HTML validation rules */}
-            <input {...register("exampleRequired")} />
-            {/* errors will return when field validation fails  */}
-            {errors.exampleRequired && <span>This field is required</span>}
 
-            <input type="submit" />
-        </form>
+                </div>
+
+                <div>
+                    <label >Last Name</label>
+                    <input type="text" className="form-control"  {...register("noidung")} required />
+
+
+                </div>
+                <input type="submit" />
+            </form>
+
+            <form onSubmit={handleSubmit2(onSubmitEmail)}>
+                <div>
+                    <label htmlFor="email" placeholder="bluebill1049@hotmail.com">
+                        Email
+          </label>
+                    <input name="email" {...register2("example3")} />
+
+                </div>
+                <input type="submit" />
+            </form>
+        </div>
     );
 }
+
+export default Test;

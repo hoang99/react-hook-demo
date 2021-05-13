@@ -12,6 +12,7 @@ function PostList(props) {
     const { getDataPostList } = props
     // console.log(getDataPostList);
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register: registerEdit, handleSubmit: handleSubmitEdit, watch: watchEdit, formState: { errors1 } } = useForm();
 
     const onHandleSubmit = (data) => {
         console.log(data);
@@ -20,11 +21,21 @@ function PostList(props) {
         // console.log(watch("noidung"))
     }
 
+    const onHandleDelete = (id) => {
+        // console.log(id);
+        props.deleteDataPostLost(id)
 
+    }
 
+    const onHandleGetDataEdit = (value) => {
+        // console.log(id);
+        props.getDataEdit(value)
 
-
-
+    }
+    const onHandleEdit = (dataEdit) => {
+        // console.log(dataEdit);
+        props.pushDataEdit(dataEdit)
+    }
     return (
         <div className="container-fluid" >
             <div class="row">
@@ -35,22 +46,23 @@ function PostList(props) {
                                 <th>STT</th>
                                 <th>Tên bài báo</th>
                                 <th>Nội dung</th>
-                                <th>
-                                    xóa
-                                </th>
+                                <th>Xóa</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
                                 getDataPostList.map((value, key) => (
-                                    <tr>
+                                    <tr >
                                         <td>{value.id}</td>
                                         <td>{value.title}</td>
                                         <td>{value.desc}</td>
                                         <td>
-                                            <button className="btn btn-danger" >Xóa</button>
-
+                                            <button className="btn btn-warning" data-toggle="modal" data-target="#btnEdit" onClick={() => onHandleGetDataEdit(value)} >Sửa</button>
                                         </td>
+                                        <td>
+                                            <button className="btn btn-danger" onClick={() => onHandleDelete(value.id)} >Xóa</button>
+                                        </td>
+
                                     </tr>
                                 ))
                             }
@@ -71,11 +83,39 @@ function PostList(props) {
 
                         <button type="submit" className="btn btn-primary" >Thêm</button>
                     </form>
-
                 </div>
+                {/* handle btn edit */}
+                <div>
+                    <div className="modal fade" id="btnEdit" tabIndex={-1} role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <form onSubmit={handleSubmitEdit(onHandleEdit)}>
+                                        <div className="form-group" >
+                                            <label htmlFor="exampleInputEmail1">Tên bài báo</label>
+                                            <input type="text" className="form-control"  {...registerEdit("tenbaibao")} required />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="exampleInputPassword1">Nội dung</label>
+                                            <input type="text" className="form-control"  {...registerEdit("noidung")} required />
+                                        </div>
+
+                                        <button type="submit" className="btn btn-primary" >Thêm</button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* end handle btn edit */}
             </div>
-
-
         </div>
     );
 }
