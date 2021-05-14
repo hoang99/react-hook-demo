@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
+
 PostList.propTypes = {
     getDataPostList: PropTypes.array,
 };
@@ -26,18 +27,39 @@ function PostList(props) {
         props.deleteDataPostLost(id)
 
     }
-
+    const [defaultValueEdit, setdefaultValueEdit] = useState('')
     const onHandleGetDataEdit = (value) => {
-        // console.log(id);
-        props.getDataEdit(value)
 
+        props.getDataEdit(value)
+        setdefaultValueEdit(value)
+        // console.log(defaultValueEdit.desc);
     }
+
     const onHandleEdit = (dataEdit) => {
         // console.log(dataEdit);
         props.pushDataEdit(dataEdit)
     }
+
+
     return (
         <div className="container-fluid" >
+            <div className="row">
+                <h5>Search</h5>
+                <div className="d-flex justify-content-between ml-3"  >
+
+                    <div className="form-group ">
+                        <div className="input-group">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text" >
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                            <input type="text" className="form-control" placeholder="Search ..." name="searchItem" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div class="row">
                 <div className="col-9">
                     <table className="table table-striped table-hover ">
@@ -99,14 +121,17 @@ function PostList(props) {
                                     <form onSubmit={handleSubmitEdit(onHandleEdit)}>
                                         <div className="form-group" >
                                             <label htmlFor="exampleInputEmail1">Tên bài báo</label>
-                                            <input type="text" className="form-control"  {...registerEdit("tenbaibao")} required />
+                                            <input type="text" className="form-control"  {...registerEdit("tenbaibao")} Value={defaultValueEdit.title} />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="exampleInputPassword1">Nội dung</label>
-                                            <input type="text" className="form-control"  {...registerEdit("noidung")} required />
+                                            <input type="text" className="form-control"  {...registerEdit("noidung")} Value={defaultValueEdit.desc} />
                                         </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" className="btn btn-warning" >Sửa</button>
 
-                                        <button type="submit" className="btn btn-primary" >Thêm</button>
+                                        </div>
                                     </form>
                                 </div>
 

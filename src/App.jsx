@@ -87,6 +87,8 @@ function App() {
         }
         postDataNews()
     }
+
+
     ///////////// PUT
     const [getIDEdit, setGetIDEdit] = useState('')
     const [getDataEdit, setGetDataEdit] = useState('')
@@ -96,46 +98,61 @@ function App() {
 
     const handlePushDataEdit = (value) => {
 
-
-        var dataEdit = {};
-        dataEdit.id = getIDEdit
-        dataEdit.title = value.tenbaibao
-        dataEdit.desc = value.noidung
-        setGetDataEdit(dataEdit)
-        dataPostList.map(i => {
-            if (i.id === dataEdit.id) {
-                i.title = dataEdit.title;
-                i.desc = dataEdit.desc;
+        if (window.confirm("Bạn có chắc chắn muốn sửa")) {
+            var dataEdit = {};
+            dataEdit.id = getIDEdit
+            dataEdit.title = value.tenbaibao
+            dataEdit.desc = value.noidung
+            setGetDataEdit(dataEdit)
+            console.log(getDataEdit);
+            async function editDataPostList() {
+                await axios({
+                    method: 'PUT',
+                    url: "http://localhost:3000/new/" + getIDEdit,
+                    data: {
+                        title: value.tenbaibao,
+                        desc: value.noidung,
+                    },
+                }).then(res => res.data)
+                    .then(res => console.log(res))
+                // .then(res => setdataPostList(...dataPostList, res))
             }
-        })
-        async function editDataPostList() {
-            await axios({
-                method: 'PUT',
-                url: "http://localhost:3000/new/" + getIDEdit,
-                data: {
-                    title: value.tenbaibao,
-                    desc: value.noidung,
-                },
-            }).then(res => res.data)
+            editDataPostList()
+
         }
-        editDataPostList()
     }
+    useEffect(() => {
+        async function getDataNews() {
+            // fetch data from a url endpoint
+            await axios({
+                method: 'GET',
+                url: 'http://localhost:3000/new',
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8",
+                },
+                data: null,
+            }).then((res) => setdataPostList(res.data))
+        }
+        getDataNews()
+    }, [getDataEdit])
+
+
 
     //////////// DELETE 
     const handleDeleteDataPostList = (id) => {
         // console.log(id);
-        const dataPostListAfterDeletedata = dataPostList.filter(item => item.id !== id)
-        setdataPostList(dataPostListAfterDeletedata)
-        async function deleteDataPostList() {
-            await axios({
-                method: "DELETE",
-                url: "http://localhost:3000/new/" + id,
-                data: null
-            }).then(res => res.data)
+        if (window.confirm("Bạn có chắc chắn muốn xóa")) {
+            const dataPostListAfterDeletedata = dataPostList.filter(item => item.id !== id)
+            setdataPostList(dataPostListAfterDeletedata)
+            async function deleteDataPostList() {
+                await axios({
+                    method: "DELETE",
+                    url: "http://localhost:3000/new/" + id,
+                    data: null
+                }).then(res => res.data)
+            }
+            deleteDataPostList()
         }
-        deleteDataPostList()
-
-
     }
     // console.log(dataPostList)
     return (
